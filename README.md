@@ -2,11 +2,11 @@
 
 ## gridEvent
 
-####### clearGridData : 해당 그리드의 데이터를 클리어, $('#gridId').clearGridData();
+###### clearGridData : 해당 그리드의 데이터를 클리어, $('#gridId').clearGridData();
 
-####### onSelectRow : 행이 원클릭 되었을때 발생, onSelectRow : function( rowid, status ) {...},
+###### onSelectRow : 행이 원클릭 되었을때 발생, onSelectRow : function( rowid, status ) {...},
 
-####### ondblClickRow : 행이 더블클릭 되었을때 발생
+###### ondblClickRow : 행이 더블클릭 되었을때 발생
 
 ## gridMethod
 
