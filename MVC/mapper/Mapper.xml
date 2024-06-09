@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MHK10">
+
+
+<select id="selectFwpInfo" parameterType="java.lang.String" resultType="qrmap">
+/* MHF01.selectChoiceFwpInfo */
+<![CDATA[
+ SELECT A.FWP_APL_NO
+      , A.EMP_UNIQ_NO
+      , B.EMP_NO
+      , B.EMP_NM
+      , A.DEPT_CD
+      , B.DEPT_NM
+      , A.APL_EMP_UNIQ_NO
+      , PG_MH_HR.FN_MH_GET_EMPNO(A.APL_EMP_UNIQ_NO) AS APL_EMP_NO
+      , PG_MH_HR.FN_MH_GET_EMPNM(A.APL_EMP_UNIQ_NO) AS APL_EMP_NM
+      , A.APL_DEPT_CD
+      , A.MAIN_DUTI
+      , A.APL_DT
+      , A.FWP_KIND_CD
+      , A.FWP_TY_CD
+      , A.APL_DIV_CD
+      , A.WRK_BEGN_DT
+      , A.WRK_CLSE_DT
+      , A.WRK_DESEL_DT
+      , A.MON_BEGN_PTM
+      , A.MON_CLSE_PTM
+      , A.MON_WRK_PTM
+      , A.TUE_BEGN_PTM
+      , A.TUE_CLSE_PTM
+      , A.TUE_WRK_PTM
+      , A.WED_BEGN_PTM
+      , A.WED_CLSE_PTM
+      , A.WED_WRK_PTM
+      , A.THU_BEGN_PTM
+      , A.THU_CLSE_PTM
+      , A.THU_WRK_PTM
+      , A.FRI_BEGN_PTM
+      , A.FRI_CLSE_PTM
+      , A.FRI_WRK_PTM
+      , A.FWP_RSON_CD
+      , A.FWP_DTLS_RSON
+      , A.ATTCH_DOCT_ID
+      , A.APP_STAT_DIV_CD
+      , A.BF_FWP_APL_NO
+      , A.DEL_YN
+   FROM TB_MH_FWP_NEW  A
+      , VW_MHC_EMP  B
+  WHERE 1=1
+    AND A.EMP_UNIQ_NO = B.EMP_UNIQ_NO
+    AND A.FWP_APL_NO  = #{fwpAplNo:VARCHAR}
+]]>
+</select>
+
+<select id="selectChoiceFwpInfoRow" resultType="qrmap">
+/* MHF01.selectChoiceFwpInfoRow */
+<![CDATA[
+ SELECT A.FWP_APL_NO
+      , A.EMP_UNIQ_NO
+      , B.EMP_NO
+      , B.EMP_NM
+      , A.DEPT_CD
+      , B.DEPT_NM
+      , A.APL_EMP_UNIQ_NO
+      , PG_MH_HR.FN_MH_GET_EMPNO(A.APL_EMP_UNIQ_NO) AS APL_EMP_NO
+      , PG_MH_HR.FN_MH_GET_EMPNM(A.APL_EMP_UNIQ_NO) AS APL_EMP_NM
+      , A.APL_DEPT_CD
+      , A.MAIN_DUTI
+      , A.APL_DT
+      , A.FWP_KIND_CD
+      , A.FWP_TY_CD
+      , A.APL_DIV_CD
+      , A.WRK_BEGN_DT
+      , A.WRK_CLSE_DT
+      , A.WRK_DESEL_DT
+      , A.MON_BEGN_PTM
+      , A.MON_CLSE_PTM
+      , A.MON_WRK_PTM
+      , A.TUE_BEGN_PTM
+      , A.TUE_CLSE_PTM
+      , A.TUE_WRK_PTM
+      , A.WED_BEGN_PTM
+      , A.WED_CLSE_PTM
+      , A.WED_WRK_PTM
+      , A.THU_BEGN_PTM
+      , A.THU_CLSE_PTM
+      , A.THU_WRK_PTM
+      , A.FRI_BEGN_PTM
+      , A.FRI_CLSE_PTM
+      , A.FRI_WRK_PTM
+      , A.FWP_RSON_CD
+      , A.FWP_DTLS_RSON
+      , A.ATTCH_DOCT_ID
+      , A.APP_STAT_DIV_CD
+      , A.BF_FWP_APL_NO
+      , A.DEL_YN
+   FROM TB_MH_FWP_NEW  A
+      , VW_MHC_EMP  B
+  WHERE 1=1
+    AND A.EMP_UNIQ_NO = B.EMP_UNIQ_NO
+    AND A.EMP_UNIQ_NO = #{srchEmpUniqNo}
+    AND FWP_KIND_CD = #{fwpKindCd}
+]]>
+<if test="fwpAplNo != null and fwpAplNo != ''">
+  <![CDATA[
+       AND A.FWP_APL_NO  = #{fwpAplNo:VARCHAR}
+  ]]>
+</if>
+</select>
+
+
+</mapper>

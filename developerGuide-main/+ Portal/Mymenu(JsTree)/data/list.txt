@@ -1,0 +1,83 @@
+[pierp.app.eip.bizENV.envb.model.SyMenuVO@4c59ef48[
+  id=MA
+  parent=MIS
+  text=자산
+  
+  /* submenuList 2차 : 기준정보 */
+  subMenuList=[pierp.app.eip.bizENV.envb.model.SyMenuVO@1551c8ae[
+  
+  id=MAA
+  parent=MA
+  text=기준정보
+  
+  /* submenuList 3차 : 자산분류코드, 사용장소정보, 관리부서매핑 */
+  subMenuList=[pierp.app.eip.bizENV.envb.model.SyMenuVO@6059e430[
+	  id=MAA0101
+	  parent=MAA
+	  text=자산분류코드
+	  subMenuList=[]
+	  sysId=ERP
+	  menuId=MAA0101
+	  subSysId=MIS
+	  menuNm=자산분류코드
+	  menuEngNm=<null>
+	  menuDivCd=M
+	  mdulId=MAA0101
+	  chrgerYn=N
+	  upprMenuId=MAA
+	  iqryOrd=1
+	  menuNo=120101
+	  regEmpNo=90004
+	  regUsrId=ithelp
+	  regDt=<null>
+	  lastChgEmpNo=90004
+	  lastChgUsrId=ithelp
+	  lastChgDt=<null>
+], pierp.app.eip.bizENV.envb.model.SyMenuVO@2dd07664[
+	  id=MAA0102
+	  parent=MAA
+	  text=사용장소정보
+	  subMenuList=[]
+	  sysId=ERP
+	  menuId=MAA0102
+	  subSysId=MIS
+	  menuNm=사용장소정보
+	  menuEngNm=<null>
+	  menuDivCd=M
+	  mdulId=MAA0102
+	  chrgerYn=N
+	  upprMenuId=MAA
+	  iqryOrd=2
+	  menuNo=120102
+	  regEmpNo=90004
+	  regUsrId=ithelp
+	  regDt=<null>
+	  lastChgEmpNo=90004
+	  lastChgUsrId=ithelp
+	  lastChgDt=<null>
+], 
+pierp.app.eip.bizENV.envb.model.SyMenuVO@13b3ac0a[
+	  id=MAA0103
+	  parent=MAA
+	  text=관리부서매핑
+	  subMenuList=[]
+	  sysId=ERP
+	  menuId=MAA0103
+	  subSysId=MIS
+	  menuNm=관리부서매핑
+	  menuEngNm=<null>
+	  menuDivCd=M
+	  mdulId=MAA0103
+	  chrgerYn=N
+	  upprMenuId=MAA
+	  iqryOrd=3
+	  menuNo=120103
+	  regEmpNo=90004
+	  regUsrId=ithelp
+	  regDt=<null>
+	  lastChgEmpNo=90004
+	  lastChgUsrId=ithelp
+	  lastChgDt=<null>
+]]
+
+

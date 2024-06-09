@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+  SQL File Name : SYE02_Mapper.xml
+  Description   : 접근제어 관리를 위해 사용하는 SQL 모음.
+  author        : 이정민
+  since         : 2022.05.09
+  
+  Modification Information
+  수정일자     수정자     수정내용
+  - - - - - -  - - - - -  - - - - - - - - - - - - - - - - - - - - -
+  2022.05.09 이정민 최초작성
+ -->
+<mapper namespace="SYE02">
+
+<!-- 관리자 접근제어 사용여부 조회  -->
+<select id="getMngrAprhCtrlYn" resultType="String">
+  /* SYE02.getMngrAprhCtrlYn */
+  SELECT MNGR_IP_APRH_CTRL_USE_YN
+    FROM TB_SY_USR_COM_SECU_SET
+</select>
+
+<!-- 사용자 접근제어 사용여부 조회  -->
+<select id="getUsrAprhCtrlYn" resultType="String">
+  /* SYE02.getUsrAprhCtrlYn */
+  SELECT USR_IP_APRH_CTRL_USE_YN
+    FROM TB_SY_USR_COM_SECU_SET
+</select>
+
+<!-- 접근제어 정보 조회 -->
+<select id="selectAprhCtrlList" parameterType="map" resultType="qrmap">
+  /* SYE02.selectAprhCtrlList */
+  SELECT (SELECT MNGR_IP_APRH_CTRL_USE_YN FROM TB_SY_USR_COM_SECU_SET) AS MNGR_IP_APRH_CTRL_USE_YN,
+         A.APRH_CTRL_ID,
+         A.BEGN_IP,
+         A.END_IP,
+         A.RMK,
+         A.REG_EMP_NO,
+         A.REG_USR_ID,
+         A.REG_DT,
+         A.LAST_CHG_EMP_NO,
+         A.LAST_CHG_USR_ID,
+         A.LAST_CHG_DT,
+         B.USR_NM,
+         B.USR_ID
+    FROM TB_SY_APRH_CTRL A
+        ,VW_SY_USR B
+   WHERE A.REG_USR_ID = B.USR_ID
+  <if test='sysCls != null and sysCls != ""' >
+    AND SYS_CLS = #{sysCls}
+  </if>
+  ORDER BY REG_DT DESC
+</select>
+
+<!-- 접근제어 정보 생성 -->
+<insert id="insertAprhCtrl" parameterType="map">
+  /* SYE02.insertAprhCtrl */
+  <selectKey resultType="String" keyProperty="aprhCtrlId" order="BEFORE">
+    SELECT PG_SY.FN_GET_ART_KEY('SYS', #{regEmpNo}, 'TB_SY_APRH_CTRL', 'APRH_CTRL_ID') AS APRH_CTRL_ID
+      FROM dual
+  </selectKey>
+    INSERT INTO TB_SY_APRH_CTRL
+    (APRH_CTRL_ID, SYS_CLS, BEGN_IP, END_IP, RMK, REG_EMP_NO,REG_USR_ID,REG_DT, LAST_CHG_EMP_NO, LAST_CHG_USR_ID, LAST_CHG_DT)
+    VALUES
+    (#{aprhCtrlId}, #{sysCls}, #{begnIp}, #{endIp}, #{rmk}, #{regEmpNo}, #{regUsrId}, SYSDATE, #{lastChgEmpNo}, #{lastChgUsrId}, SYSDATE)
+</insert>
+
+<!-- 접근제어 정보 수정 -->
+<update id="updateAprhCtrl" parameterType="map">
+  /* SYE02.updateAprhCtrl */
+  UPDATE TB_SY_APRH_CTRL
+     SET BEGN_IP = #{begnIp},
+         END_IP = #{endIp},
+         RMK = #{rmk},
+         LAST_CHG_USR_ID = #{lastChgUsrId},
+         LAST_CHG_EMP_NO = #{lastChgEmpNo},
+         LAST_CHG_DT     = SYSDATE
+   WHERE APRH_CTRL_ID = #{aprhCtrlId}
+     AND SYS_CLS = #{sysCls}
+</update>
+
+
+
+<!-- 접근제어 정보 삭제 -->
+<delete id="deleteAprhCtrl" parameterType="map">
+  /* SYE02.deleteAprhCtrl */
+  DELETE TB_SY_APRH_CTRL
+   WHERE APRH_CTRL_ID = #{aprhCtrlId}
+     AND SYS_CLS = #{sysCls}
+</delete>
+
+
+<!-- 관리자 접근제어 정보 수정 : IP 접근제어 사용여부 변경 -->
+<update id="changeMngrAprhCtrl" parameterType="String">
+  /* SYE02.changeMngrAprhCtrl */
+  UPDATE TB_SY_USR_COM_SECU_SET
+     SET MNGR_IP_APRH_CTRL_USE_YN = #{mngrIpAprhCtrlUseYn}
+</update>
+
+<!-- 사용자 접근제어 정보 수정 : IP 접근제어 사용여부 변경 -->
+<update id="changeUsrAprhCtrl" parameterType="String">
+  /* SYE02.changeUsrAprhCtrl */
+  UPDATE TB_SY_USR_COM_SECU_SET
+     SET USR_IP_APRH_CTRL_USE_YN = #{usrIpAprhCtrlUseYn}
+</update>
+
+
+</mapper>

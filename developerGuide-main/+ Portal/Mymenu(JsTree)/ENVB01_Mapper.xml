@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+  SQL File Name : ENVB01_Mapper.xml
+  Description   : ${param.servicedesc}
+  author        : 이정민
+  since         : 2022.06.22.
+
+  Modification Information
+  수정일자     수정자     수정내용
+  - - - - - -  - - - - -  - - - - - - - - - - - - - - - - - - - - -
+  2022.06.22.   이정민
+ -->
+<mapper namespace="ENVB01">
+
+  <!-- 상위 시스템 구분값 조회용도 ( EAU : 감사, EIS : 경영기획, MIS : 경영관리, SMP : 샘플, SSK : 성과평가 ) -->
+  <select id="selectSysMenuDivList"  parameterType="pierp.app.common.cmd.SearchCmd" resultType="qrmap">
+    /* ENVB01.selectSysMenuDivList - 마이메뉴 상위 트리 조회 */
+    SELECT COM_CD AS id
+        , '#' AS parent
+        , COM_CD_CNTS AS text
+    FROM VW_SY_COM_CD
+   WHERE 1=1
+     AND COM_CLSS_CD = 'SY041'
+  </select>
+
+  <resultMap id="menuDepthList" type="pierp.app.eip.bizENV.envb.model.SyMenuVO">
+      <id property="id" column="id" />
+
+      <result property="parent" column="parent"/>
+      <result property="text"   column="text"/>
+
+      <result property="sysId"       column="SYS_ID"/>
+      <result property="menuId"      column="MENU_ID"/>
+      <result property="subSysId"    column="SUB_SYS_ID"/>
+      <result property="menuNm"      column="MENU_NM"/>
+      <result property="menuEngNm"   column="MENU_ENG_NM"/>
+      <result property="menuDivCd"   column="MENU_DIV_CD"/>
+      <result property="mdulId"      column="MDUL_ID"/>
+      <result property="chrgerYn"    column="CHRGER_YN"/>
+      <result property="upprMenuId"  column="UPPR_MENU_ID"/>
+      <result property="iqryOrd"     column="IQRY_ORD"/>
+      <result property="menuNo"      column="MENU_NO"/>
+
+      <result property="regEmpNo"     column="regEmpNo"/>
+      <result property="regUsrId"     column="regUsrId"/>
+      <result property="regDt"        column="regDt"/>
+      <result property="lastChgEmpNo" column="lastChgEmpNo"/>
+      <result property="lastChgUsrId" column="lastChgUsrId"/>
+      <result property="lastChgDt"    column="lastChgDt"/>
+
+      <collection property="subMenuList" ofType="pierp.app.eip.bizENV.envb.model.SyMenuVO" column="{parent=id}"
+          select="selectSubList"></collection>
+
+  </resultMap>
+
+
+  <sql id="selectMenuCols">
+    SYS_ID
+    , MENU_ID
+    , SUB_SYS_ID
+    , MENU_NM
+    , MENU_ENG_NM
+    , MENU_DIV_CD
+    , MDUL_ID
+    , CHRGER_YN
+    , UPPR_MENU_ID
+    , IQRY_ORD
+    , MENU_NO
+    <include refid="Page.selectCommonCols"/>
+  </sql>
+
+
+  <select id="select1DepthList" parameterType="pierp.app.common.cmd.SearchCmd" resultMap="menuDepthList" >
+    /* ENVB01.select1DepthList - 마이메뉴 1depth 조회 */
+    SELECT MENU_ID AS id
+         ,#{searchText, jdbcType=VARCHAR} AS parent
+         ,MENU_NM AS text
+         ,
+         <include refid="selectMenuCols"/>
+    FROM TB_SY_MENU A
+    WHERE 1=1
+      AND UPPR_MENU_ID = '*'
+      AND SUB_SYS_ID = #{searchText, jdbcType=VARCHAR} OR SYS_ID = #{searchText, jdbcType=VARCHAR}
+    ORDER BY MENU_ID, IQRY_ORD
+  </select>
+
+  <select id="selectSubList" parameterType="java.util.Map" resultMap="menuDepthList" >
+    /* ENVB01.selectSubList - 마이메뉴 SubList 조회 */
+    SELECT MENU_ID AS id
+         ,#{parent, jdbcType=VARCHAR} AS parent
+         ,MENU_NM AS text
+         ,
+         <include refid="selectMenuCols"/>
+    FROM TB_SY_MENU A
+    WHERE 1=1
+      AND UPPR_MENU_ID = #{parent, jdbcType=VARCHAR}
+    ORDER BY MENU_ID, IQRY_ORD
+  </select>
+
+
+  <select id="selectAuthMenuList"  parameterType="pierp.app.eip.bizENV.envb.model.MenuSearchCmd" resultType="String">
+    /* ENVB01.selectAuthMenuList - 마이메뉴 권한 모듈 조회 */
+    SELECT C.MENU_ID
+      FROM (SELECT SYS_ID, AUHT_ID
+              FROM VW_SY_USR_AUHT
+             WHERE 1=1
+               and USR_ID = #{regUsrId, jdbcType=VARCHAR}
+           ) A
+          ,VW_SY_AUHT_MDUL B
+          ,VW_SY_MENU C
+          ,VW_SY_MDUL D
+    WHERE B.SYS_ID = A.SYS_ID
+      AND C.SYS_ID = B.SYS_ID
+      AND B.AUHT_ID = A.AUHT_ID
+      AND C.MDUL_ID = B.MDUL_ID
+      AND C.SYS_ID = D.SYS_ID
+      AND D.MDUL_ID = C.MDUL_ID
+      AND D.USE_DIV_CD = 'Y'
+  </select>
+
+
+  <select id="selectMyMenuList"  parameterType="pierp.app.eip.bizENV.envb.model.MenuSearchCmd" resultType="pierp.app.common.model.table.TbBpMyMenuVO">
+    /* ENVB01.selectMyMenuList - 마이메뉴 저장 현황 조회 */
+    SELECT MENU_ID     AS menuId   /*메뉴ID*/
+        , USR_ID     AS usrId    /*사용자ID*/
+        , (SELECT V.MDUL_NM FROM VW_SY_MDUL V WHERE V.MDUL_ID = A.CHOC_MDUL_ID) AS menuNm
+        , CHOC_TOP_MENU_ID   AS chocTopMenuId    /*선택_톱_메뉴_ID*/
+        , CHOC_MENU_ID   AS chocMenuId   /*선택_메뉴_ID*/
+        , CHOC_MDUL_ID   AS chocMdulId   /*선택_모듈_ID*/
+        , LUP_ORD    AS lupOrd   /*정렬순서*/
+    <include refid="Page.selectCommonCols"/>
+    FROM TB_BP_MY_MENU A
+    WHERE 1=1
+      AND USR_ID =  #{usrId, jdbcType=VARCHAR}
+      ORDER BY LUPORD
+  </select>
+
+
+
+  <delete id="deleteMyMenu" parameterType="pierp.app.eip.bizENV.envb.model.MenuSearchCmd">
+      /* ENVB01.deleteMyMenu - 마이메뉴 삭제 */
+      DELETE FROM TB_BP_MY_MENU
+      WHERE USR_ID = #{usrId, jdbcType=VARCHAR}
+  </delete>
+
+
+  <update id="saveMyMenu" parameterType="pierp.app.common.model.table.TbBpMyMenuVO">
+    /* ENVB01.saveMyMenu - 마이메뉴 저장 */
+    <selectKey resultType="string" keyProperty="menuId" order="BEFORE">
+      SELECT PG_BP.FN_GET_ART_KEY('ENV', #{regEmpNo, jdbcType=VARCHAR}, 'TB_BP_MY_MENU', 'MENU_ID') AS menuId FROM dual
+    </selectKey>
+      INSERT INTO TB_BP_MY_MENU
+      (  MENU_ID                           /*메뉴ID*/
+        ,USR_ID                            /*사용자ID*/
+        ,MENU_NM                           /*메뉴명*/
+        ,CHOC_TOP_MENU_ID                  /*선택_톱_메뉴_ID*/
+        ,CHOC_MENU_ID                      /*선택_메뉴_ID*/
+        ,CHOC_MDUL_ID                      /*선택_모듈_ID*/
+        ,LUP_ORD                           /*정렬순서*/
+        <include refid="Page.insertCommonColsPrefix"/>
+      ) VALUES (
+       #{menuId,        jdbcType=VARCHAR }      /*메뉴ID*/
+      ,#{usrId,         jdbcType=VARCHAR }      /*사용자ID*/
+      ,#{menuNm,        jdbcType=VARCHAR }      /*메뉴명*/
+      ,#{chocTopMenuId, jdbcType=VARCHAR }      /*선택_톱_메뉴_ID*/
+      ,#{chocMenuId,    jdbcType=VARCHAR }      /*선택_메뉴_ID*/
+      ,#{chocMdulId,    jdbcType=VARCHAR }      /*선택_모듈_ID*/
+      ,#{lupOrd,        jdbcType=VARCHAR }      /*정렬순서*/
+      <include refid="Page.insertCommonColsSurfix"/>
+      )
+  </update>
+
+</mapper>
