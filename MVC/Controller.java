@@ -18,9 +18,9 @@ public class MHK1001Controller extends BaseAbstractController
 
 	@RequestMapping("/ajaxR/MHK1001/selectChoiceFwpInfo.do")
 	public @ResponseBody 
-	Object selectChoiceFwpInfo(@RequestParam(value="empNo", required=true, defaultValue="") String fwpAplNo, BindingResult br) {
+	Object selectFwpInfo(@RequestParam(value="empNo", required=true, defaultValue="") String fwpAplNo, BindingResult br) {
 
-		QueryResultMap info = mhk10Service.selectChoiceFwpInfo(fwpAplNo);
+		QueryResultMap info = mhk10Service.selectFwpInfo(fwpAplNo);
 		ResponseDTO resDto = createResponseDTO();
 		resDto.put("mstBox", info);
 
