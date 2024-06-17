@@ -1,5 +1,9 @@
 ## PiERP
 
+## pierp.ui.components 에서 공통함수 확인
+
+### getGridParam('selrow') vs getGridParam('data') 차이 있는지 확인필요!
+
 ### gridEvent
 
 ###### clearGridData - 해당 그리드의 데이터를 clear : $('#gridId').clearGridData();
@@ -7,6 +11,8 @@
 ###### onSelectRow - 행이 원클릭 되었을때 발생 : onSelectRow : function( rowid, status ) {...},
 
 ###### ondblClickRow - 행이 더블클릭 되었을때 발생
+
+###### afterSaveCell - 저장 후
 
 ###### validEditCell - 수정 불가, 수정 가능 체크
 
@@ -21,3 +27,13 @@
 ###### getCell - cell value 반환 : var audtPrgsStatCd = $('#list').getCell( selRow, 'audtPrgsStatCd');
 
 ###### setCell - cell value set : $('#list').setCell(selRow, 'marAlcAmt', 0);
+
+### 공통검색 팝업 호출
+
+##### makeGridSearchEvent - grid cell 선택시 팝업 호출
+
+##### setSearchHandler - input 입력 시 팝업 호출
+
+### 업무 팝업 호출
+
+##### cfn_PopUpModule - 업무화면 popup 호출 시
