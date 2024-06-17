@@ -701,7 +701,7 @@ $('#btnExcelUpload').click( function() {
             $('#list').setGridData( data );
         }
     };
-    s
+    
     cfn_OpenExcelUpload( options );
 });
 
