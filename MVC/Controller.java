@@ -5,9 +5,6 @@ public class MHK1001Controller extends BaseAbstractController
 	@Autowired MHK10Service mhk10Service;
 
 
-
-
-
 	/** 매개변수
 	 * @RequestParam : parameter
 	 * @RequestBody : Object
@@ -16,6 +13,24 @@ public class MHK1001Controller extends BaseAbstractController
 	 */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//map으로 한 건 받기
 	@RequestMapping("/ajaxR/MHK1001/selectChoiceFwpInfo.do")
 	public @ResponseBody 
 	Object selectFwpInfo(@RequestParam(value="empNo", required=true, defaultValue="") String fwpAplNo, BindingResult br) {
